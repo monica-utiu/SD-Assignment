@@ -1,11 +1,14 @@
 package com.example.AssignmentTrial1.service;
 
+import com.example.AssignmentTrial1.dto.UserDTO;
 import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -23,24 +26,45 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
-
     @Override
-    public List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<UserDTO> users = new ArrayList<>();
+        userRepository.findAll().forEach(u -> {
+            UserDTO userDTO = new UserDTO(u.getFirstName(), u.getLastName());
+            users.add(userDTO);
+        });
+        return users;
     }
 
     @Override
-    public User readUser(Integer id) {
-        return userRepository.findById(id).get();
+    public UserDTO readUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+            return new UserDTO(user.get().getFirstName(), user.get().getLastName());
+        } else {
+            return null;
+        }
+    }
+    // update if id exists, else don't create it
+    // you cannot change id, first name or role, my design rule
+    @Override
+    public User updateUser(Long id, User user) {
+        Optional<User> user1 = userRepository.findById(id);
+        if(user1.isPresent()) {
+            User oldUser = user1.get();
+            if(user.getEmail() != null)  oldUser.setEmail(user.getEmail());
+            if(user.getPhone() != null)  oldUser.setPhone(user.getPhone());
+            if(user.getRating() != null) oldUser.setRating(user.getRating());
+            if(user.getLastName() != null) oldUser.setLastName(user.getLastName());
+            return userRepository.save(oldUser);
+        } else {
+            return null; // ? save new data or not?
+        }
+
     }
 
     @Override
-    public User updateUser(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUser(int id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 }

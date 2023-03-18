@@ -1,34 +1,41 @@
 package com.example.AssignmentTrial1.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.awt.*;
 import java.sql.Date;
 import java.util.ArrayList;
 
-@Table(name="content")
+@MappedSuperclass
 public abstract class Content {
-    @Id
-    private int id;
-
+    @EmbeddedId
+    //@ManyToOne
+    //@Column(name="content_id")
+    private ContentPK id;
+    @OneToOne( cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "user_id")
     private User author;
+    @Column
     private String title;
+    @Column(name="text_content")
     private String text;
+    @Column(name="creation")
     private Date timeStamp;
     // idk ce se pune la imagini
+    @Column(name="picture")
     private String image;
-    //private ArrayList<Vote> votes;
+    @OneToMany()
+    @JoinColumn(name="content_id")
+    private ArrayList<Vote> votes;
 
-    public Content(int id, User author, String title, String text, Date timeStamp, String image, ArrayList<Vote> votes) {
-        this.id = id;
+    public Content(Integer id, User author, String title, String text, Date timeStamp, String image, ArrayList<Vote> votes) {
+        this.id.setId(id);
         this.author = author;
         this.title = title;
         this.text = text;
         this.timeStamp = timeStamp;
         this.image = image;
-        //this.votes = votes;
+        this.votes = votes;
     }
 
     public Content() {
@@ -36,11 +43,11 @@ public abstract class Content {
     }
 
     public int getId() {
-        return id;
+        return id.getId();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id.setId(id);
     }
 
     public User getAuthor() {
@@ -83,11 +90,11 @@ public abstract class Content {
         this.image = image;
     }
 
-//    public ArrayList<Vote> getVotes() {
-//        return votes;
-//    }
-//
-//    public void setVotes(ArrayList<Vote> votes) {
-//        this.votes = votes;
-//    }
+    public ArrayList<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<Vote> votes) {
+        this.votes = votes;
+    }
 }

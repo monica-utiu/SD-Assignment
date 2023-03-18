@@ -19,6 +19,7 @@ public class User {
     @Column
     private Float rating;
     @Column
+    @Enumerated(EnumType.STRING)
     private Role rol;
     //private String password;
 
