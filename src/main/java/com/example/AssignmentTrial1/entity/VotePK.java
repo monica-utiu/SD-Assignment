@@ -9,9 +9,12 @@ public class VotePK implements Serializable {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
-//    @ManyToOne
-//    @Column(name="content_id")
-    //private Content content;
+    @ManyToOne
+    @JoinColumn(name="content_id")
+    private Question content;
+    @ManyToOne
+    @JoinColumn(name="content_id")
+    private Answer answer;
 
 
 }

@@ -12,4 +12,20 @@ public class Vote {
     private VotePK id;
     @Column
     private Integer vote;
+
+    public VotePK getId() {
+        return id;
+    }
+
+    public void setId(VotePK id) {
+        this.id = id;
+    }
+
+    public Integer getVote() {
+        return vote;
+    }
+
+    public void setVote(Integer vote) {
+        this.vote = vote;
+    }
 }

@@ -4,15 +4,18 @@ import jakarta.persistence.*;
 
 import java.awt.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @MappedSuperclass
 public abstract class Content {
-    @EmbeddedId
-    //@ManyToOne
-    //@Column(name="content_id")
-    private ContentPK id;
-    @OneToOne( cascade = CascadeType.ALL)
+    @Id
+    @Column(name="content_id")
+    private Integer id;
+    @ManyToOne
+    @JoinColumn(name="to_content_id")
+    private Question contentId;
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "user_id")
     private User author;
     @Column
@@ -20,7 +23,7 @@ public abstract class Content {
     @Column(name="text_content")
     private String text;
     @Column(name="creation")
-    private Date timeStamp;
+    private LocalDateTime timeStamp;
     // idk ce se pune la imagini
     @Column(name="picture")
     private String image;
@@ -28,8 +31,8 @@ public abstract class Content {
     @JoinColumn(name="content_id")
     private ArrayList<Vote> votes;
 
-    public Content(Integer id, User author, String title, String text, Date timeStamp, String image, ArrayList<Vote> votes) {
-        this.id.setId(id);
+    public Content(Integer id, User author, String title, String text, LocalDateTime timeStamp, String image, ArrayList<Vote> votes) {
+        this.id = id;
         this.author = author;
         this.title = title;
         this.text = text;
@@ -43,11 +46,11 @@ public abstract class Content {
     }
 
     public int getId() {
-        return id.getId();
+        return id;
     }
 
     public void setId(int id) {
-        this.id.setId(id);
+        this.id = id;
     }
 
     public User getAuthor() {
@@ -74,11 +77,11 @@ public abstract class Content {
         this.text = text;
     }
 
-    public Date getTimeStamp() {
+    public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Date timeStamp) {
+    public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 
@@ -96,5 +99,18 @@ public abstract class Content {
 
     public void setVotes(ArrayList<Vote> votes) {
         this.votes = votes;
+    }
+
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Question getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(Question contentId) {
+        this.contentId = contentId;
     }
 }

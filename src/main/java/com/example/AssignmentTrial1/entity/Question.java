@@ -15,9 +15,22 @@ public class Question extends Content{
     joinColumns = @JoinColumn(name = "content_id"),
     inverseJoinColumns = @JoinColumn(name="tag_id"))
     private ArrayList<Tags> tags;
-    @OneToMany(mappedBy = "content_id")
-    // modificat pk la content ca nu pot s afac selfrefrencing
-    @Column(name="question_id")
+    @OneToMany(mappedBy = "to_content_id")
     private ArrayList<Answer> answers ;
 
+    public ArrayList<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<Tags> tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(ArrayList<Answer> answers) {
+        this.answers = answers;
+    }
 }
