@@ -21,7 +21,7 @@ public class UserController {
     @Autowired
     UserServiceImpl userService;
 
-    @GetMapping(path="/get/{user_id}")
+    @GetMapping(path="/getUser/{user_id}")
     @ResponseBody
     public UserDTO getUser(@PathVariable Long user_id) {
         return userService.readUser(user_id);

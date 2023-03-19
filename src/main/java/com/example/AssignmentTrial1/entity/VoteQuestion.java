@@ -6,18 +6,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="votes")
-public class Vote {
+@Table(name="vote_question")
+public class VoteQuestion {
     @EmbeddedId
-    private VotePK id;
+    private VotePKQ id;
     @Column
     private Integer vote;
 
-    public VotePK getId() {
+    public VotePKQ getId() {
         return id;
     }
 
-    public void setId(VotePK id) {
+    public void setId(VotePKQ id) {
         this.id = id;
     }
 

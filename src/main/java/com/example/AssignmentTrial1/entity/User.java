@@ -2,6 +2,9 @@ package com.example.AssignmentTrial1.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="users")
 public class User {
@@ -21,7 +24,15 @@ public class User {
     @Column
     @Enumerated(EnumType.STRING)
     private Role rol;
+    @OneToMany(mappedBy = "author")
+    private ArrayList<Question> questions = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private ArrayList<Answer> answer = new ArrayList<>();
     //private String password;
+//    @OneToMany(mappedBy = "user")
+//    private List<VoteAnswer> voteAnswers;
+//    @OneToMany(mappedBy = "user")
+//    private List<VoteQuestion> voteQuestions;
 
     public User() {
 
@@ -35,6 +46,22 @@ public class User {
         this.phone = phone;
         this.rating = rating;
         this.rol = rol;
+    }
+
+    public ArrayList<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(ArrayList<Question> questions) {
+        this.questions = questions;
+    }
+
+    public ArrayList<Answer> getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(ArrayList<Answer> answer) {
+        this.answer = answer;
     }
 
     public Long getUserId() {

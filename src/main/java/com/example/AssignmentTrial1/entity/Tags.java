@@ -9,11 +9,10 @@ import java.util.List;
 @Table(name="tags")
 public class Tags {
     @Id
-    private int id;
     @Column
     private String tag;
-    @Column(name="question_id")
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "tags")
-    private List<Question> question = new ArrayList<>();
+//    @Column(name="question_id")
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "tags")
+//    private List<Question> question = new ArrayList<>();
 
 }
