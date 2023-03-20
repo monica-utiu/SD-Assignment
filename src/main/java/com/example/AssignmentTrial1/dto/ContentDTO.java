@@ -1,13 +1,14 @@
 package com.example.AssignmentTrial1.dto;
 
 import java.time.LocalDateTime;
+import java.sql.Date;
 
 public class ContentDTO {
     private String text;
-    private LocalDateTime creation;
+    private Date creation;
     private String author;
 
-    public ContentDTO(String text, LocalDateTime creation, String author) {
+    public ContentDTO(String text, Date creation, String author) {
         this.text = text;
         this.creation = creation;
         this.author = author;
@@ -21,11 +22,11 @@ public class ContentDTO {
         this.text = text;
     }
 
-    public LocalDateTime getCreation() {
+    public Date getCreation() {
         return creation;
     }
 
-    public void setCreation(LocalDateTime creation) {
+    public void setCreation(Date creation) {
         this.creation = creation;
     }
 

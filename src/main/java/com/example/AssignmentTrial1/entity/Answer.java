@@ -2,6 +2,7 @@ package com.example.AssignmentTrial1.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -11,17 +12,19 @@ public class Answer{
     @Id
     @Column(name="answer_id")
     private Integer id;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name="question_id")
     private Question questionId;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author")
     private User author;
     @Column(name="text_answer")
     private String text;
     @Column(name="creation")
-    private LocalDateTime timeStamp;
+    private Date timeStamp;
     // idk ce se pune la imagini
+    @Column(name="updated")
+    private Date updated;
     @Column(name="picture")
     private String image;
 //    @OneToMany(mappedBy = "answer")
@@ -30,13 +33,21 @@ public class Answer{
     public Answer() {
 
     }
-    public Answer(Integer id, Question questionId, User author, String text, LocalDateTime timeStamp, String image) {
+    public Answer(Integer id, Question questionId, User author, String text, Date timeStamp, String image) {
         this.id = id;
         this.questionId = questionId;
         this.author = author;
         this.text = text;
         this.timeStamp = timeStamp;
         this.image = image;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     public Integer getId() {
@@ -71,11 +82,11 @@ public class Answer{
         this.text = text;
     }
 
-    public LocalDateTime getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 

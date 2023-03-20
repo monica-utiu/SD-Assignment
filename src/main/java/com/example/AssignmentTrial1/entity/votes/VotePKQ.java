@@ -1,5 +1,7 @@
-package com.example.AssignmentTrial1.entity;
+package com.example.AssignmentTrial1.entity.votes;
 
+import com.example.AssignmentTrial1.entity.Question;
+import com.example.AssignmentTrial1.entity.User;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

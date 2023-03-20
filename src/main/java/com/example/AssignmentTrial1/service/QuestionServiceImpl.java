@@ -1,28 +1,53 @@
 package com.example.AssignmentTrial1.service;
 
+import com.example.AssignmentTrial1.dto.AnswerDTO;
+import com.example.AssignmentTrial1.dto.QuestionAnswersDTO;
 import com.example.AssignmentTrial1.dto.QuestionDTO;
 import com.example.AssignmentTrial1.entity.Question;
+import com.example.AssignmentTrial1.entity.Answer;
+import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.QuestionRepository;
 import com.example.AssignmentTrial1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
+    static Integer id = 10;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
-    public Question createQuestion(Question questionDetails) {
+    public Question createQuestion(Long userId, Question questionDetails) {
+        // if i would have userRepository here i would check for the userId and get it
+        Optional<User> author = userRepository.findById(userId);
+        if(author.isPresent()) {
+            questionDetails.setAuthor(author.get());
+            // verify if i dont have to add to author the question to their list
+            Integer qID = id++;
+            questionDetails.setId(id);
+            questionDetails.setTimeStamp(new Date(System.currentTimeMillis()));
+            questionRepository.save(questionDetails);
+            return questionDetails;
+        }
         return null;
     }
 
     @Override
     public List<QuestionDTO> getAllQuestions() {
-        return null;
+        List<QuestionDTO> questions = new ArrayList<>();
+        questionRepository.findAll().forEach(q->questions.add(new QuestionDTO(q.getText(),q.getTimeStamp(),q.getAuthor().getFirstName()+q.getAuthor().getLastName(),q.getTitle())));
+        return questions;
     }
 
     @Override
@@ -36,12 +61,53 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public QuestionAnswersDTO readQuestionAndAnswer(Integer id) {
+        Optional<Question> question = questionRepository.findById(id);
+        if(question.isPresent()) {
+            Question question1 = question.get();
+            QuestionDTO questionDTO  = new QuestionDTO( question1.getText(),question1.getTimeStamp(),question1.getAuthor().getFirstName()+question1.getAuthor().getLastName(),question1.getTitle());
+            List<Answer> answers = question1.getAnswers();
+            if(answers.isEmpty())
+                return new QuestionAnswersDTO(questionDTO,null);
+            else {
+                List<AnswerDTO> answersDTO = new ArrayList<>();
+                answers.forEach(a->answersDTO.add(new AnswerDTO(a.getText(),a.getTimeStamp(),a.getAuthor().getFirstName()+a.getAuthor().getLastName())));
+                return new QuestionAnswersDTO(questionDTO,answersDTO);
+            }
+        }
+        return null;
+    }
+    private void updateTime(Question question) {
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        question.setUpdated(sqlDate);
+    }
+    @Override
     public Question updateQuestion(Integer id, Question newQuestion) {
+        Optional<Question> question = questionRepository.findById(id);
+        if(question.isPresent()) {
+            Question oldQ = question.get();
+            if(newQuestion.getText()!=null) {
+                oldQ.setText(newQuestion.getText());
+                updateTime(oldQ);
+            }
+            if(newQuestion.getTitle()!=null)
+            {
+                oldQ.setTitle(newQuestion.getTitle());
+                updateTime(oldQ);
+            }
+            if(newQuestion.getImage()!=null) {
+                oldQ.setImage(newQuestion.getImage());
+                updateTime(oldQ);
+            }
+            return questionRepository.save(oldQ);
+        }
         return null;
     }
 
     @Override
     public void deleteQuestion(Integer id) {
+        questionRepository.deleteById(id);
 
     }
 }

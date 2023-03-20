@@ -24,10 +24,10 @@ public class User {
     @Column
     @Enumerated(EnumType.STRING)
     private Role rol;
-    @OneToMany(mappedBy = "author")
-    private ArrayList<Question> questions = new ArrayList<>();
-    @OneToMany(mappedBy = "author")
-    private ArrayList<Answer> answer = new ArrayList<>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Question> questions;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Answer> answer;
     //private String password;
 //    @OneToMany(mappedBy = "user")
 //    private List<VoteAnswer> voteAnswers;
@@ -48,19 +48,19 @@ public class User {
         this.rol = rol;
     }
 
-    public ArrayList<Question> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(ArrayList<Question> questions) {
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 
-    public ArrayList<Answer> getAnswer() {
+    public List<Answer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(ArrayList<Answer> answer) {
+    public void setAnswer(List<Answer> answer) {
         this.answer = answer;
     }
 

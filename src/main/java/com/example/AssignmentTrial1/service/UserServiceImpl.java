@@ -1,6 +1,7 @@
 package com.example.AssignmentTrial1.service;
 
 import com.example.AssignmentTrial1.dto.UserDTO;
+import com.example.AssignmentTrial1.entity.Role;
 import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
-    static Long lastId = 1L;
+    static Long lastId = 10L;
     @Autowired
     UserRepository userRepository;
     public UserServiceImpl() {
@@ -22,6 +23,8 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user) {
         Long userId = lastId++;
         user.setUserId(userId);
+        user.setRating(0.0F);
+        user.setRol(Role.USER);
         userRepository.save(user);
         return user;
     }

@@ -1,5 +1,7 @@
-package com.example.AssignmentTrial1.entity;
+package com.example.AssignmentTrial1.entity.votes;
 
+import com.example.AssignmentTrial1.entity.Answer;
+import com.example.AssignmentTrial1.entity.User;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

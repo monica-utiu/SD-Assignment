@@ -1,5 +1,6 @@
-package com.example.AssignmentTrial1.entity;
+package com.example.AssignmentTrial1.entity.votes;
 
+import com.example.AssignmentTrial1.entity.votes.VotePKQ;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

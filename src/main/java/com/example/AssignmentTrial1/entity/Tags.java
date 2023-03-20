@@ -13,6 +13,6 @@ public class Tags {
     private String tag;
 //    @Column(name="question_id")
 //    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "tags")
-//    private List<Question> question = new ArrayList<>();
+//    private List<Question> question;
 
 }

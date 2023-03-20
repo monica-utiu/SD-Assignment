@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.awt.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="question")
@@ -13,16 +13,18 @@ public class Question{
     @Id
     @Column(name="question_id")
     private Integer id;
-    @ManyToOne( cascade = CascadeType.ALL)
-    @JoinColumn
+    @ManyToOne
+    @JoinColumn(name="author")
     private User author;
     @Column
     private String title;
     @Column(name="text_question")
     private String text;
     @Column(name="creation")
-    private LocalDateTime timeStamp;
+    private Date timeStamp;
     // idk ce se pune la imagini
+    @Column(name="updated")
+    private Date updated;
     @Column(name="picture")
     private String image;
 //    @OneToMany(mappedBy = "question")
@@ -32,8 +34,8 @@ public class Question{
 //    joinColumns = @JoinColumn(name = "question_id"),
 //    inverseJoinColumns = @JoinColumn(name="tag"))
 //    private ArrayList<Tags> tags;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "questionId")
-    private ArrayList<Answer> answers = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "questionId",cascade = CascadeType.ALL)
+    private List<Answer> answers;
 
 //    public ArrayList<Tags> getTags() {
 //        return tags;
@@ -46,7 +48,7 @@ public class Question{
     public Question() {
 
     }
-    public Question(Integer id, User author, String title, String text, LocalDateTime timeStamp, String image, ArrayList<Answer> answers) {
+    public Question(Integer id, User author, String title, String text, Date timeStamp, String image, List<Answer> answers) {
         this.id = id;
         this.author = author;
         this.title = title;
@@ -56,11 +58,19 @@ public class Question{
         this.answers = answers;
     }
 
-    public ArrayList<Answer> getAnswers() {
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(ArrayList<Answer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
 
@@ -96,11 +106,11 @@ public class Question{
         this.text = text;
     }
 
-    public LocalDateTime getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 

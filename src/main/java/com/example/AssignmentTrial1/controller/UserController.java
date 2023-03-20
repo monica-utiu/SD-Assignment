@@ -53,7 +53,7 @@ public class UserController {
         return new ResponseEntity<>(user_id, HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAllUsers")
     @ResponseBody
     public List<UserDTO> getAllUsers() {
        return userService.getAllUsers();
