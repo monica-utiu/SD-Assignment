@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDTO> getAllUsers() {
         List<UserDTO> users = new ArrayList<>();
         userRepository.findAll().forEach(u -> {
-            UserDTO userDTO = new UserDTO(u.getFirstName(), u.getLastName());
+            UserDTO userDTO = new UserDTO(u.getUserId(),u.getFirstName(), u.getLastName());
             users.add(userDTO);
         });
         return users;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService{
     public UserDTO readUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) {
-            return new UserDTO(user.get().getFirstName(), user.get().getLastName());
+            return new UserDTO(user.get().getUserId(), user.get().getFirstName(), user.get().getLastName());
         } else {
             return null;
         }

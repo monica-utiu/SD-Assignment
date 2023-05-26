@@ -2,7 +2,6 @@ package com.example.AssignmentTrial1.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

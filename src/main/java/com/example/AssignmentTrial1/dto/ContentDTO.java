@@ -1,17 +1,30 @@
 package com.example.AssignmentTrial1.dto;
-
-import java.time.LocalDateTime;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class ContentDTO {
+    private Integer id;
     private String text;
-    private Date creation;
-    private String author;
+    private Timestamp creation;
+    private UserDTO author;
+    private String picture = "";
+    private Integer vote;
 
-    public ContentDTO(String text, Date creation, String author) {
+    public ContentDTO() {}
+    public ContentDTO(Integer id, String text, Timestamp creation, UserDTO author, String picture, Integer vote) {
+        this.id =id;
         this.text = text;
         this.creation = creation;
         this.author = author;
+        this.picture = picture;
+        this.vote = vote;
+    }
+
+    public ContentDTO(Integer id, String text, Timestamp creation, UserDTO author) {
+        this.id = id;
+        this.text = text;
+        this.creation = creation;
+        this.author = author;
+        this.vote = 0;
     }
 
     public String getText() {
@@ -22,19 +35,44 @@ public class ContentDTO {
         this.text = text;
     }
 
-    public Date getCreation() {
+    public Timestamp getCreation() {
         return creation;
     }
 
-    public void setCreation(Date creation) {
+    public void setCreation(Timestamp creation) {
         this.creation = creation;
     }
 
-    public String getAuthor() {
+    public UserDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(UserDTO author) {
         this.author = author;
     }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Integer getVote() {
+        return vote;
+    }
+
+    public void setVote(Integer vote) {
+        this.vote = vote;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }
+

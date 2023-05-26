@@ -3,21 +3,20 @@ package com.example.AssignmentTrial1.service;
 import com.example.AssignmentTrial1.dto.AnswerDTO;
 import com.example.AssignmentTrial1.dto.QuestionAnswersDTO;
 import com.example.AssignmentTrial1.dto.QuestionDTO;
+import com.example.AssignmentTrial1.dto.UserDTO;
 import com.example.AssignmentTrial1.entity.Question;
 import com.example.AssignmentTrial1.entity.Answer;
 import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.QuestionRepository;
 import com.example.AssignmentTrial1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
@@ -36,17 +35,19 @@ public class QuestionServiceImpl implements QuestionService{
             // verify if i dont have to add to author the question to their list
             Integer qID = id++;
             questionDetails.setId(id);
-            questionDetails.setTimeStamp(new Date(System.currentTimeMillis()));
+            questionDetails.setTimeStamp(new Timestamp(System.currentTimeMillis()));
             questionRepository.save(questionDetails);
             return questionDetails;
         }
         return null;
     }
-
     @Override
     public List<QuestionDTO> getAllQuestions() {
         List<QuestionDTO> questions = new ArrayList<>();
-        questionRepository.findAll().forEach(q->questions.add(new QuestionDTO(q.getText(),q.getTimeStamp(),q.getAuthor().getFirstName()+q.getAuthor().getLastName(),q.getTitle())));
+        questionRepository.findAll().forEach(q->questions.add(
+                new QuestionDTO(q.getId(),q.getText(),q.getTimeStamp(),new UserDTO(q.getAuthor().getUserId(), q.getAuthor().getFirstName(), q.getAuthor().getLastName()), q.getTitle(),
+                        q.getAnswers().stream().map(Answer::getText).collect(Collectors.toList()))
+        ));
         return questions;
     }
 
@@ -55,7 +56,7 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
             Question question1 = question.get();
-            return new QuestionDTO( question1.getText(),question1.getTimeStamp(),question1.getAuthor().getFirstName()+question1.getAuthor().getLastName(),question1.getTitle());
+            return new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(), new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()), question1.getTitle());
         }
         return null;
     }
@@ -65,22 +66,21 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
             Question question1 = question.get();
-            QuestionDTO questionDTO  = new QuestionDTO( question1.getText(),question1.getTimeStamp(),question1.getAuthor().getFirstName()+question1.getAuthor().getLastName(),question1.getTitle());
+            QuestionDTO questionDTO  = new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(),new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()), question1.getTitle());
             List<Answer> answers = question1.getAnswers();
             if(answers.isEmpty())
                 return new QuestionAnswersDTO(questionDTO,null);
             else {
                 List<AnswerDTO> answersDTO = new ArrayList<>();
-                answers.forEach(a->answersDTO.add(new AnswerDTO(a.getText(),a.getTimeStamp(),a.getAuthor().getFirstName()+a.getAuthor().getLastName())));
+                answers.forEach(a->answersDTO.add(new AnswerDTO(a.getId(),a.getText(),a.getTimeStamp(),new UserDTO(a.getAuthor().getUserId(), a.getAuthor().getFirstName(),a.getAuthor().getLastName()))));
                 return new QuestionAnswersDTO(questionDTO,answersDTO);
             }
         }
         return null;
     }
     private void updateTime(Question question) {
-        java.util.Date utilDate = new java.util.Date();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-        question.setUpdated(sqlDate);
+        Timestamp date = new Timestamp(System.currentTimeMillis());
+        question.setUpdated(date);
     }
     @Override
     public Question updateQuestion(Integer id, Question newQuestion) {

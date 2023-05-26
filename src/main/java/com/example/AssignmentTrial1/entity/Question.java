@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.awt.*;
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,10 +23,9 @@ public class Question{
     @Column(name="text_question")
     private String text;
     @Column(name="creation")
-    private Date timeStamp;
-    // idk ce se pune la imagini
+    private Timestamp timeStamp;
     @Column(name="updated")
-    private Date updated;
+    private Timestamp updated;
     @Column(name="picture")
     private String image;
 //    @OneToMany(mappedBy = "question")
@@ -48,7 +49,7 @@ public class Question{
     public Question() {
 
     }
-    public Question(Integer id, User author, String title, String text, Date timeStamp, String image, List<Answer> answers) {
+    public Question(Integer id, User author, String title, String text, Timestamp timeStamp, String image, List<Answer> answers) {
         this.id = id;
         this.author = author;
         this.title = title;
@@ -58,11 +59,11 @@ public class Question{
         this.answers = answers;
     }
 
-    public Date getUpdated() {
+    public Timestamp getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Date updated) {
+    public void setUpdated(Timestamp updated) {
         this.updated = updated;
     }
 
@@ -106,11 +107,11 @@ public class Question{
         this.text = text;
     }
 
-    public Date getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Date timeStamp) {
+    public void setTimeStamp(Timestamp timeStamp) {
         this.timeStamp = timeStamp;
     }
 

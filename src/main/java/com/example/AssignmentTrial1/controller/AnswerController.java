@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/answers")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AnswerController {
     @Autowired
     AnswerServiceImpl answerService;
@@ -55,5 +56,7 @@ public class AnswerController {
         answerService.deleteAnswer(a_id);
         return new ResponseEntity<>(a_id,HttpStatus.OK);
     }
+
+
 }
 

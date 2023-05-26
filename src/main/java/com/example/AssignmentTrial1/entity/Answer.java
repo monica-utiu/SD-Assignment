@@ -3,6 +3,8 @@ package com.example.AssignmentTrial1.entity;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -21,10 +23,10 @@ public class Answer{
     @Column(name="text_answer")
     private String text;
     @Column(name="creation")
-    private Date timeStamp;
+    private Timestamp timeStamp;
     // idk ce se pune la imagini
     @Column(name="updated")
-    private Date updated;
+    private Timestamp updated;
     @Column(name="picture")
     private String image;
 //    @OneToMany(mappedBy = "answer")
@@ -33,7 +35,7 @@ public class Answer{
     public Answer() {
 
     }
-    public Answer(Integer id, Question questionId, User author, String text, Date timeStamp, String image) {
+    public Answer(Integer id, Question questionId, User author, String text, Timestamp timeStamp, String image) {
         this.id = id;
         this.questionId = questionId;
         this.author = author;
@@ -42,11 +44,11 @@ public class Answer{
         this.image = image;
     }
 
-    public Date getUpdated() {
+    public Timestamp getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Date updated) {
+    public void setUpdated(Timestamp updated) {
         this.updated = updated;
     }
 
@@ -82,11 +84,11 @@ public class Answer{
         this.text = text;
     }
 
-    public Date getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Date timeStamp) {
+    public void setTimeStamp(Timestamp timeStamp) {
         this.timeStamp = timeStamp;
     }
 

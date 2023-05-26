@@ -1,18 +1,32 @@
 package com.example.AssignmentTrial1.dto;
-
-import java.sql.Date;
-import java.time.LocalDateTime;
+import com.example.AssignmentTrial1.entity.Answer;
+import com.example.AssignmentTrial1.entity.User;
+import java.sql.Timestamp;
 
 public class AnswerDTO extends ContentDTO{
     private String question;
 
-
-    public AnswerDTO(String text, Date creation, String author, String question) {
-        super(text, creation, author);
+    public AnswerDTO(Integer id,String text, Timestamp creation, UserDTO author, String question) {
+        super(id, text, creation, author);
         this.question = question;
     }
 
-    public AnswerDTO(String text, Date creation, String author) {
-        super(text,creation,author);
+    public AnswerDTO(Integer id, String text, Timestamp creation, UserDTO author) {
+        super(id,text,creation,author);
+    }
+
+    public AnswerDTO(Answer answer) {
+        super(answer.getId(), answer.getText(), answer.getTimeStamp(),
+                new UserDTO(answer.getAuthor().getUserId(), answer.getAuthor().getFirstName(), answer.getAuthor().getLastName()));
+        this.question = answer.getQuestionId().getText();
+    }
+
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
     }
 }
