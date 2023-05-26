@@ -9,6 +9,7 @@ import com.example.AssignmentTrial1.entity.Answer;
 import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.QuestionRepository;
 import com.example.AssignmentTrial1.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class QuestionServiceImpl implements QuestionService{
     static Integer id = 10;
     @Autowired
@@ -41,12 +43,13 @@ public class QuestionServiceImpl implements QuestionService{
         }
         return null;
     }
+
     @Override
     public List<QuestionDTO> getAllQuestions() {
         List<QuestionDTO> questions = new ArrayList<>();
         questionRepository.findAll().forEach(q->questions.add(
                 new QuestionDTO(q.getId(),q.getText(),q.getTimeStamp(),new UserDTO(q.getAuthor().getUserId(), q.getAuthor().getFirstName(), q.getAuthor().getLastName()), q.getTitle(),
-                        q.getAnswers().stream().map(Answer::getText).collect(Collectors.toList()))
+                        q.getAnswersDTO())
         ));
         return questions;
     }
@@ -66,7 +69,9 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
             Question question1 = question.get();
-            QuestionDTO questionDTO  = new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(),new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()), question1.getTitle());
+            QuestionDTO questionDTO  = new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(),
+                    new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()),
+                    question1.getTitle(),question1.getAnswersDTO());
             List<Answer> answers = question1.getAnswers();
             if(answers.isEmpty())
                 return new QuestionAnswersDTO(questionDTO,null);

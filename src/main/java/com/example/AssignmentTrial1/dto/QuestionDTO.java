@@ -1,15 +1,17 @@
 package com.example.AssignmentTrial1.dto;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 public class QuestionDTO extends ContentDTO {
     private String title;
-    private List<String> answersList;
 
-    public QuestionDTO(Integer id, String text, Timestamp creation, UserDTO author, String title, List<String> answers) {
+    private List<AnswerDTO> answers;
+
+    public QuestionDTO(Integer id, String text, Timestamp creation, UserDTO author, String title, List<AnswerDTO> answers) {
         super(id, text,creation,author);
         this.title = title;
-        this.answersList = answers;
+        this.answers = answers;
     }
 
     public QuestionDTO(Integer id, String text, Timestamp creation, UserDTO author, String title) {
@@ -24,11 +26,11 @@ public class QuestionDTO extends ContentDTO {
         this.title = title;
     }
 
-    public List<String> getAnswersList() {
-        return answersList;
+    public List<AnswerDTO> getAnswers() {
+        return answers;
     }
 
-    public void setAnswersList(List<String> answersList) {
-        this.answersList = answersList;
+    public void setAnswers(List<AnswerDTO> answersList) {
+        this.answers = answersList;
     }
 }

@@ -47,6 +47,18 @@ public class User {
         this.rol = rol;
     }
 
+    public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, Role rol, List<Question> questions, List<Answer> answer) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.rating = rating;
+        this.rol = rol;
+        this.questions = questions;
+        this.answer = answer;
+    }
+
     public List<Question> getQuestions() {
         return questions;
     }

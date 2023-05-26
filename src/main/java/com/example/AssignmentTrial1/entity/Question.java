@@ -1,5 +1,7 @@
 package com.example.AssignmentTrial1.entity;
 
+import com.example.AssignmentTrial1.dto.AnswerDTO;
+import com.example.AssignmentTrial1.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.awt.*;
@@ -8,6 +10,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="question")
@@ -38,7 +41,19 @@ public class Question{
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "questionId",cascade = CascadeType.ALL)
     private List<Answer> answers;
 
-//    public ArrayList<Tags> getTags() {
+    public Question(Integer id, User author, String title, String text, Timestamp timeStamp, Timestamp updated, String image, List<Answer> answers) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.text = text;
+        this.timeStamp = timeStamp;
+        this.updated = updated;
+        this.image = image;
+        this.answers = answers;
+    }
+
+
+    //    public ArrayList<Tags> getTags() {
 //        return tags;
 //    }
 //
@@ -69,6 +84,16 @@ public class Question{
 
     public List<Answer> getAnswers() {
         return answers;
+    }
+
+    public List<AnswerDTO> getAnswersDTO() {
+        return this.getAnswers().stream()
+                .map(answer -> {
+                    return new AnswerDTO(answer.getId(),answer.getText(),answer.getTimeStamp(),
+                            new UserDTO(this.getAuthor().getUserId(), this.getAuthor().getFirstName(), this.getAuthor().getLastName()),
+                            this.text);
+                })
+                .collect(Collectors.toList());
     }
 
     public void setAnswers(List<Answer> answers) {

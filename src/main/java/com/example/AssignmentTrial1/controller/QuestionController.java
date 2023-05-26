@@ -36,6 +36,7 @@ public class QuestionController {
     public List<QuestionDTO> getAllQuestions() {
         return questionService.getAllQuestions();
     }
+
     @PostMapping(path="create/user/{u_id}")
     @ResponseBody
     public ResponseEntity<Question> createQuestion(@PathVariable Long u_id, @RequestBody Question newQuestion) {
@@ -45,6 +46,7 @@ public class QuestionController {
         }
         return new ResponseEntity<>(question,HttpStatus.CREATED);
     }
+
     @PutMapping(path="update/{q_id}")
     @ResponseBody
     public ResponseEntity<Question> updateQuestion(@PathVariable Integer q_id,@RequestBody Question questionDetails) {

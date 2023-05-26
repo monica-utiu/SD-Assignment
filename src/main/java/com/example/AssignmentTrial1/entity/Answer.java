@@ -44,6 +44,16 @@ public class Answer{
         this.image = image;
     }
 
+    public Answer(Integer id, Question questionId, User author, String text, Timestamp timeStamp, Timestamp updated, String image) {
+        this.id = id;
+        this.questionId = questionId;
+        this.author = author;
+        this.text = text;
+        this.timeStamp = timeStamp;
+        this.updated = updated;
+        this.image = image;
+    }
+
     public Timestamp getUpdated() {
         return updated;
     }
