@@ -6,8 +6,10 @@ import com.example.AssignmentTrial1.dto.QuestionDTO;
 import com.example.AssignmentTrial1.dto.UserDTO;
 import com.example.AssignmentTrial1.entity.Question;
 import com.example.AssignmentTrial1.entity.Answer;
+import com.example.AssignmentTrial1.entity.Tags;
 import com.example.AssignmentTrial1.entity.User;
 import com.example.AssignmentTrial1.repository.QuestionRepository;
+import com.example.AssignmentTrial1.repository.TagRepository;
 import com.example.AssignmentTrial1.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class QuestionServiceImpl implements QuestionService{
     QuestionRepository questionRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TagRepository tagRepository;
 
     @Override
     public Question createQuestion(Long userId, Question questionDetails) {
@@ -34,9 +38,7 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<User> author = userRepository.findById(userId);
         if(author.isPresent()) {
             questionDetails.setAuthor(author.get());
-            // verify if i dont have to add to author the question to their list
-            Integer qID = id++;
-            questionDetails.setId(id);
+            questionDetails.setId(id++);
             questionDetails.setTimeStamp(new Timestamp(System.currentTimeMillis()));
             questionRepository.save(questionDetails);
             return questionDetails;
@@ -114,5 +116,23 @@ public class QuestionServiceImpl implements QuestionService{
     public void deleteQuestion(Integer id) {
         questionRepository.deleteById(id);
 
+    }
+
+
+    public void addTagToQuestion(Integer questionId, String tagTitle) {
+        Optional<Question> question = this.questionRepository.findById(questionId);
+        if(question.isPresent()) {
+            // Check if the tag already exists
+            Tags tag = tagRepository.findByTitle(tagTitle);
+            if (tag == null) {
+                // Tag does not exist, create a new one
+                tag = new Tags();
+                tag.setTitle(tagTitle);
+                tagRepository.save(tag);
+            }
+            Question question1 = question.get();
+            question1.getTags().add(tag);
+            questionRepository.save(question1);
+        }
     }
 }

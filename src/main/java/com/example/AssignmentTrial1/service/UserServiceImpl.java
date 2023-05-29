@@ -7,7 +7,6 @@ import com.example.AssignmentTrial1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,20 +29,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<UserDTO> users = new ArrayList<>();
-        userRepository.findAll().forEach(u -> {
-            UserDTO userDTO = new UserDTO(u.getUserId(),u.getFirstName(), u.getLastName());
-            users.add(userDTO);
-        });
-        return users;
+    public List<User> getAllUsers() {
+        return (List<User>) userRepository.findAll();
     }
 
     @Override
     public UserDTO readUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) {
-            return new UserDTO(user.get().getUserId(), user.get().getFirstName(), user.get().getLastName());
+            return new UserDTO(user.get().getUserId(), user.get().getEmail(),user.get().getFirstName(), user.get().getLastName(),
+                    "",user.get().getPhone(), user.get().getRating());
         } else {
             return null;
         }

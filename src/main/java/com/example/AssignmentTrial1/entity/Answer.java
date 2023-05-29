@@ -1,5 +1,6 @@
 package com.example.AssignmentTrial1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -14,9 +15,11 @@ public class Answer{
     @Id
     @Column(name="answer_id")
     private Integer id;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="question_id")
     private Question questionId;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "author")
     private User author;

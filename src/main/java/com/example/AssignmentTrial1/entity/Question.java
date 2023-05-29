@@ -2,6 +2,8 @@ package com.example.AssignmentTrial1.entity;
 
 import com.example.AssignmentTrial1.dto.AnswerDTO;
 import com.example.AssignmentTrial1.dto.UserDTO;
+import com.example.AssignmentTrial1.entity.votes.VoteQuestion;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.awt.*;
@@ -9,6 +11,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +34,19 @@ public class Question{
     private Timestamp updated;
     @Column(name="picture")
     private String image;
-//    @OneToMany(mappedBy = "question")
-//    private ArrayList<VoteQuestion> votes;
-//    @ManyToMany()
-//    @JoinTable(name="question_tag",
-//    joinColumns = @JoinColumn(name = "question_id"),
-//    inverseJoinColumns = @JoinColumn(name="tag"))
-//    private ArrayList<Tags> tags;
+    @JsonIgnore
+    @OneToMany(mappedBy = "question")
+    private ArrayList<VoteQuestion> votes;
+
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "question_tags",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tags> tags = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "questionId",cascade = CascadeType.ALL)
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     public Question(Integer id, User author, String title, String text, Timestamp timeStamp, Timestamp updated, String image, List<Answer> answers) {
         this.id = id;
@@ -52,8 +59,19 @@ public class Question{
         this.answers = answers;
     }
 
-
-    //    public ArrayList<Tags> getTags() {
+    public Question(Integer id, User author, String title, String text, Timestamp timeStamp, Timestamp updated, String image, ArrayList<VoteQuestion> votes, List<Tags> tags, List<Answer> answers) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.text = text;
+        this.timeStamp = timeStamp;
+        this.updated = updated;
+        this.image = image;
+        this.votes = votes;
+        this.tags = tags;
+        this.answers = answers;
+    }
+//    public ArrayList<Tags> getTags() {
 //        return tags;
 //    }
 //
@@ -98,6 +116,14 @@ public class Question{
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public ArrayList<VoteQuestion> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<VoteQuestion> votes) {
+        this.votes = votes;
     }
 
     public String getTitle() {
@@ -148,6 +174,13 @@ public class Question{
         this.image = image;
     }
 
+    public List<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
+    }
 
 //    public ArrayList<VoteQuestion> getVotes() {
 //        return votes;

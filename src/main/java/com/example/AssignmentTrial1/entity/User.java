@@ -1,5 +1,6 @@
 package com.example.AssignmentTrial1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,10 +22,17 @@ public class User {
     @Column
     private Float rating;
     @Column
+    private String passphrase;
+//    @Column
+//    private String picture;
+    @Column
     @Enumerated(EnumType.STRING)
     private Role rol;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Question> questions;
+    @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Answer> answer;
     //private String password;
@@ -35,6 +43,19 @@ public class User {
 
     public User() {
 
+    }
+
+    public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, String passphrase, Role rol, List<Question> questions, List<Answer> answer) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.rating = rating;
+        this.passphrase = passphrase;
+        this.rol = rol;
+        this.questions = questions;
+        this.answer = answer;
     }
 
     public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, Role rol) {
@@ -57,6 +78,14 @@ public class User {
         this.rol = rol;
         this.questions = questions;
         this.answer = answer;
+    }
+
+    public String getPassphrase() {
+        return passphrase;
+    }
+
+    public void setPassphrase(String passphrase) {
+        this.passphrase = passphrase;
     }
 
     public List<Question> getQuestions() {

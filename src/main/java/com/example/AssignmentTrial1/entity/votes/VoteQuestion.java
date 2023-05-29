@@ -1,25 +1,62 @@
 package com.example.AssignmentTrial1.entity.votes;
 
-import com.example.AssignmentTrial1.entity.votes.VotePKQ;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.example.AssignmentTrial1.entity.Question;
+import com.example.AssignmentTrial1.entity.User;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name="vote_question")
 public class VoteQuestion {
-    @EmbeddedId
-    private VotePKQ id;
-    @Column
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vote_id")
+    private Integer voteId;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id", referencedColumnName = "question_id")
+    private Question question;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
+    @Column(name = "vote")
     private Integer vote;
 
-    public VotePKQ getId() {
-        return id;
+
+    public VoteQuestion() {
     }
 
-    public void setId(VotePKQ id) {
-        this.id = id;
+    public VoteQuestion(Integer voteId, Question question, User user, Integer vote) {
+        this.voteId = voteId;
+        this.question = question;
+        this.user = user;
+        this.vote = vote;
+    }
+
+    public Integer getVoteId() {
+        return voteId;
+    }
+
+    public void setVoteId(Integer voteId) {
+        this.voteId = voteId;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Integer getVote() {
