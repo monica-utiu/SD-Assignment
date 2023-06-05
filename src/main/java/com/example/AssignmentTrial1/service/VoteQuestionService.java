@@ -2,9 +2,11 @@ package com.example.AssignmentTrial1.service;
 
 import com.example.AssignmentTrial1.entity.Question;
 import com.example.AssignmentTrial1.entity.User;
+import com.example.AssignmentTrial1.entity.votes.VoteAnswer;
 import com.example.AssignmentTrial1.entity.votes.VoteQuestion;
 import com.example.AssignmentTrial1.repository.QuestionRepository;
 import com.example.AssignmentTrial1.repository.UserRepository;
+import com.example.AssignmentTrial1.repository.VoteAnswerRepo;
 import com.example.AssignmentTrial1.repository.VoteQuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,27 +15,67 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class VoteQuestionService implements VoteService<VoteQuestion>{
     @Autowired
     VoteQuestionRepo voteQuestionRepo;
     @Autowired
+    VoteAnswerRepo voteAnswerRepo;
+    @Autowired
     UserRepository userRepository;
     @Autowired
     QuestionRepository questionRepository;
     @Override
-    public VoteQuestion createVote(Long userId, Integer contentId, VoteQuestion vote) {
+    public VoteQuestion createVote(Long userId, Integer contentId, Integer vote) {
         Optional<User> author = userRepository.findById(userId);
         Optional<Question> question = questionRepository.findById(contentId);
+        AtomicInteger ok= new AtomicInteger(1);
+        VoteQuestion vq = null;
+
         if(author.isPresent() && question.isPresent()) {
-            vote.setVoteId(50);
-            vote.setQuestion(question.get());
-            vote.setUser(author.get());
-            this.voteQuestionRepo.save(vote);
-            return vote;
+            // logic to not vote twice or change vote
+            List<VoteQuestion> votes = getAllVotesOfContent(contentId);
+            votes.forEach(v -> {
+                if(v.getUser()==author.get())
+                    if(Objects.equals(v.getVote(), vote)) {
+                        deleteVote(v.getVoteId());
+                        ok.set(0);
+                    }
+                    else {
+                        updateVote(v.getVoteId(), vote);
+                        ok.set(0);
+                    }
+            });
+            if(ok.get()==1) {
+                VoteQuestion voteq = new VoteQuestion();
+                voteq.setQuestion(question.get());
+                voteq.setUser(author.get());
+                voteq.setVote(vote);
+                vq = this.voteQuestionRepo.save(voteq);
+            }
+            // UPDATE SCORE
+            Question q = questionRepository.findById(contentId).get();
+            q.setRating( getScoreOfContent(contentId));
+            questionRepository.save(q);
+            // UPDATE SCORE user
+            User updateVotingUser = userRepository.findById(userId).get();
+            float score = getScoreOfUser(userId);
+            System.out.println(score);
+            System.out.println(updateVotingUser.getUserId());
+            updateVotingUser.setRating(score);
+            userRepository.save(updateVotingUser);
+
+            User updateVotedUser = question.get().getAuthor();
+            float score1 = getScoreOfUser(updateVotedUser.getUserId());
+            System.out.println(score1);
+            System.out.println(updateVotedUser.getUserId());
+            updateVotedUser.setRating(score1);
+            userRepository.save(updateVotedUser);
+
         }
-        return null;
+        return vq;
     }
 
     @Override
@@ -51,10 +93,20 @@ public class VoteQuestionService implements VoteService<VoteQuestion>{
         return votes;
     }
 
+//    @Override
+//    public List<VoteQuestion> getAllVotesOfUser(Long userId) {
+//        List<VoteQuestion> votes = new ArrayList<>();
+//        voteQuestionRepo.findAll().forEach(v -> {
+//            if (v.getUser().getUserId().equals(userId))
+//                votes.add(v);
+//        });
+//        return votes;
+//    }
+
     @Override
-    public List<VoteQuestion> getAllVotesOfUser(Long userId) {
-        List<VoteQuestion> votes = new ArrayList<>();
-        voteQuestionRepo.findAll().forEach(v -> {
+    public List<VoteAnswer> getAllVotesOfUser(Long userId) {
+        List<VoteAnswer> votes = new ArrayList<>();
+        voteAnswerRepo.findAll().forEach(v -> {
             if (v.getUser().getUserId().equals(userId))
                 votes.add(v);
         });
@@ -62,7 +114,61 @@ public class VoteQuestionService implements VoteService<VoteQuestion>{
     }
 
     @Override
-    public List<VoteQuestion> getAllVotesTowardsUser(Long userId) {
+    public List<VoteAnswer> getAllAnswerVotesTowardsUser(Long userId) {
+        List<VoteAnswer> votes = new ArrayList<>();
+        voteAnswerRepo.findAll().forEach(v -> {
+            if (Objects.equals(v.getAnswer().getAuthor().getUserId(), userId))
+                votes.add(v);
+        });
+        return votes;
+    }
+
+    public Integer getScoreOfContent(Integer questionId) {
+        List<VoteQuestion> votes = getAllVotesOfContent(questionId);
+        if(votes!=null)
+            return votes.stream().map(VoteQuestion::getVote).reduce(0,Integer::sum);
+        return 0;
+    }
+
+    public Float getScoreOfUser(Long u_id) {
+        float answerScore = getAllAnswerVotesTowardsUser(u_id) == null ? 0 :
+                getAllAnswerVotesTowardsUser(u_id).stream().map(vote -> {
+                    int voteValue = vote.getVote();
+                    if (voteValue == 1) {
+                        return 5f;
+                    } else if (voteValue == -1) {
+                        return -2.5f;
+                    } else {
+                        return 0f;
+                    }
+                }).reduce(0f,Float::sum);
+
+        float questionScore = getAllQuestionVotesTowardsUser(u_id) == null ? 0:
+                getAllQuestionVotesTowardsUser(u_id).stream().map(vote -> {
+                    int voteValue = vote.getVote();
+                    if (voteValue == 1) {
+                        return 2.5f;
+                    } else if (voteValue == -1) {
+                        return -1.5f;
+                    } else {
+                        return 0f;
+                    }
+                }).reduce(0f,Float::sum);
+
+        float userAnswerScore = getAllVotesOfUser(u_id) == null ? 0 :
+                getAllVotesOfUser(u_id).stream().map(vote -> {
+                    int voteValue = vote.getVote();
+                    if(voteValue == -1)
+                        return -1.5f;
+                    else return 0f;
+                }).reduce(0f,Float::sum);
+
+        return answerScore+questionScore+userAnswerScore;
+    }
+
+
+    @Override
+    public List<VoteQuestion> getAllQuestionVotesTowardsUser(Long userId) {
         List<VoteQuestion> votes = new ArrayList<>();
         voteQuestionRepo.findAll().forEach(v -> {
             if (Objects.equals(v.getQuestion().getAuthor().getUserId(), userId))

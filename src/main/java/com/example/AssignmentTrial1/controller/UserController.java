@@ -33,43 +33,46 @@ public class UserController {
         return userService.readUser(user_id);
     }
 
-    @GetMapping(path="getUserScore/{u_id}")
-    @ResponseBody
-    public Float getScore(@PathVariable Long u_id) {
-        float answerScore = this.voteAnswerService.getAllVotesTowardsUser(u_id) == null ? 0 :
-                this.voteAnswerService.getAllVotesTowardsUser(u_id).stream().map(vote -> {
-            int voteValue = vote.getVote();
-            if (voteValue == 1) {
-                return 5f;
-            } else if (voteValue == -1) {
-                return -2.5f;
-            } else {
-                return 0f;
-            }
-        }).reduce(0f,Float::sum);
-
-        float questionScore = this.voteQuestionService.getAllVotesTowardsUser(u_id) == null ? 0:
-            this.voteQuestionService.getAllVotesTowardsUser(u_id).stream().map(vote -> {
-            int voteValue = vote.getVote();
-            if (voteValue == 1) {
-                return 2.5f;
-            } else if (voteValue == -1) {
-                return -1.5f;
-            } else {
-                return 0f;
-            }
-        }).reduce(0f,Float::sum);
-
-        float userAnswerScore = this.voteAnswerService.getAllVotesOfUser(u_id) == null ? 0 :
-                this.voteAnswerService.getAllVotesOfUser(u_id).stream().map(vote -> {
-            int voteValue = vote.getVote();
-            if(voteValue == -1)
-                return -1.5f;
-            else return 0f;
-        }).reduce(0f,Float::sum);
-
-        return answerScore+questionScore+userAnswerScore;
-    }
+//    @GetMapping(path="getUserScore/{u_id}")
+//    @ResponseBody
+//    public Float getScore(@PathVariable Long u_id) {
+//        float answerScore = this.voteAnswerService.getAllAnswerVotesTowardsUser(u_id) == null ? 0 :
+//                this.voteAnswerService.getAllVotesTowardsUser(u_id).stream().map(vote -> {
+//            int voteValue = vote.getVote();
+//            if (voteValue == 1) {
+//                return 5f;
+//            } else if (voteValue == -1) {
+//                return -2.5f;
+//            } else {
+//                return 0f;
+//            }
+//        }).reduce(0f,Float::sum);
+//
+//        float questionScore = this.voteQuestionService.getAllVotesTowardsUser(u_id) == null ? 0:
+//            this.voteQuestionService.getAllVotesTowardsUser(u_id).stream().map(vote -> {
+//            int voteValue = vote.getVote();
+//            if (voteValue == 1) {
+//                return 2.5f;
+//            } else if (voteValue == -1) {
+//                return -1.5f;
+//            } else {
+//                return 0f;
+//            }
+//        }).reduce(0f,Float::sum);
+//
+//        float userAnswerScore = this.voteAnswerService.getAllVotesOfUser(u_id) == null ? 0 :
+//                this.voteAnswerService.getAllVotesOfUser(u_id).stream().map(vote -> {
+//            int voteValue = vote.getVote();
+//            if(voteValue == -1)
+//                return -1.5f;
+//            else return 0f;
+//        }).reduce(0f,Float::sum);
+//        Float finalScore = answerScore+questionScore+userAnswerScore;
+//        User updateUser = new User();
+//        updateUser.setRating(finalScore);
+//        updateUser(u_id, updateUser);
+//        return finalScore;
+//    }
 
     @PostMapping(path = "create")
     @ResponseBody

@@ -47,7 +47,7 @@ public class AnswerServiceImpl implements AnswerService{
     @Override
     public List<AnswerDTO> getAllAnswers() {
         List<AnswerDTO> answer = new ArrayList<>();
-        answerRepository.findAll().forEach(a->answer.add(new AnswerDTO(a.getId(),a.getText(),a.getTimeStamp(),new UserDTO(a.getAuthor().getUserId(), a.getAuthor().getFirstName(),a.getAuthor().getLastName()), a.getQuestionId().getTitle())));
+        answerRepository.findAll().forEach(a->answer.add(new AnswerDTO(a.getId(),a.getText(),a.getTimeStamp(),new UserDTO(a.getAuthor().getUserId(), a.getAuthor().getFirstName(),a.getAuthor().getLastName()), a.getQuestionId().getTitle(), a.getRating())));
         return answer;
     }
 
@@ -56,7 +56,7 @@ public class AnswerServiceImpl implements AnswerService{
         Optional<Answer> answer = answerRepository.findById(id);
         if(answer.isPresent()) {
             Answer answer1 = answer.get();
-            return new AnswerDTO(answer1.getId(),answer1.getText(),answer1.getTimeStamp(),new UserDTO(answer1.getAuthor().getUserId(), answer1.getAuthor().getFirstName(),answer1.getAuthor().getLastName()),answer1.getQuestionId().getTitle() +answer1.getQuestionId().getText());
+            return new AnswerDTO(answer1.getId(),answer1.getText(),answer1.getTimeStamp(),new UserDTO(answer1.getAuthor().getUserId(), answer1.getAuthor().getFirstName(),answer1.getAuthor().getLastName()),answer1.getQuestionId().getTitle() +answer1.getQuestionId().getText(), answer1.getRating());
         }
         return null;
     }

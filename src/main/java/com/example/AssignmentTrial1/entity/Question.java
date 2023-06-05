@@ -34,9 +34,11 @@ public class Question{
     private Timestamp updated;
     @Column(name="picture")
     private String image;
+    @Column
+    private Integer rating;
     @JsonIgnore
     @OneToMany(mappedBy = "question")
-    private ArrayList<VoteQuestion> votes;
+    private List<VoteQuestion> votes = new ArrayList<>();
 
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -45,6 +47,7 @@ public class Question{
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tags> tags = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "questionId",cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
@@ -71,13 +74,6 @@ public class Question{
         this.tags = tags;
         this.answers = answers;
     }
-//    public ArrayList<Tags> getTags() {
-//        return tags;
-//    }
-//
-//    public void setTags(ArrayList<Tags> tags) {
-//        this.tags = tags;
-//    }
 
     public Question() {
 
@@ -90,6 +86,41 @@ public class Question{
         this.timeStamp = timeStamp;
         this.image = image;
         this.answers = answers;
+    }
+
+    public Question(Integer id, User author, String title, String text, Timestamp timeStamp, Timestamp updated, String image, List<VoteQuestion> votes, List<Tags> tags, List<Answer> answers) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.text = text;
+        this.timeStamp = timeStamp;
+        this.updated = updated;
+        this.image = image;
+        this.votes = votes;
+        this.tags = tags;
+        this.answers = answers;
+    }
+
+    public Question(Integer id, User author, String title, String text, Timestamp timeStamp, Timestamp updated, String image, Integer rating, List<VoteQuestion> votes, List<Tags> tags, List<Answer> answers) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.text = text;
+        this.timeStamp = timeStamp;
+        this.updated = updated;
+        this.image = image;
+        this.rating = rating;
+        this.votes = votes;
+        this.tags = tags;
+        this.answers = answers;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     public Timestamp getUpdated() {
@@ -109,7 +140,7 @@ public class Question{
                 .map(answer -> {
                     return new AnswerDTO(answer.getId(),answer.getText(),answer.getTimeStamp(),
                             new UserDTO(this.getAuthor().getUserId(), this.getAuthor().getFirstName(), this.getAuthor().getLastName()),
-                            this.text);
+                            this.text, this.getRating());
                 })
                 .collect(Collectors.toList());
     }
@@ -118,11 +149,11 @@ public class Question{
         this.answers = answers;
     }
 
-    public ArrayList<VoteQuestion> getVotes() {
+    public List<VoteQuestion> getVotes() {
         return votes;
     }
 
-    public void setVotes(ArrayList<VoteQuestion> votes) {
+    public void setVotes(List<VoteQuestion> votes) {
         this.votes = votes;
     }
 

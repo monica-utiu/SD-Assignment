@@ -7,15 +7,16 @@ public class UserDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private String picture="";
+    private byte[] picture;
     private String phone;
     private Float rating;
+    private boolean banned;
 
     public UserDTO() {
 
     }
 
-    public UserDTO(Long userId, String email, String firstName, String lastName, String picture, String phone, Float rating) {
+    public UserDTO(Long userId, String email, String firstName, String lastName, byte[] picture, String phone, Float rating) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -23,19 +24,40 @@ public class UserDTO {
         this.picture = picture;
         this.phone = phone;
         this.rating = rating;
+
+        System.out.println(this.rating);
     }
 
-    public UserDTO(Long id, String firstName, String lastName, String picture) {
+    public UserDTO(Long id, String firstName, String lastName, byte[] picture) {
         this.userId = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.picture ="";
+        this.picture = picture;
     }
 
     public UserDTO(Long id, String firstName, String lastName) {
         this.userId =id;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public UserDTO(Long userId, String email, String firstName, String lastName, byte[] picture, String phone, Float rating, boolean banned) {
+        this.userId = userId;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.picture = picture;
+        this.phone = phone;
+        this.rating = rating;
+        this.banned = banned;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public String getEmail() {
@@ -78,11 +100,11 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public String getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 

@@ -6,8 +6,8 @@ import java.sql.Timestamp;
 public class AnswerDTO extends ContentDTO{
     private String question;
 
-    public AnswerDTO(Integer id,String text, Timestamp creation, UserDTO author, String question) {
-        super(id, text, creation, author);
+    public AnswerDTO(Integer id,String text, Timestamp creation, UserDTO author, String question, Integer vote) {
+        super(id, text, creation, author, vote);
         this.question = question;
     }
 

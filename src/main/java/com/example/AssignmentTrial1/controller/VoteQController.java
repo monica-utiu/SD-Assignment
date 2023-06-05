@@ -2,6 +2,8 @@ package com.example.AssignmentTrial1.controller;
 
 import com.example.AssignmentTrial1.entity.Question;
 import com.example.AssignmentTrial1.entity.votes.VoteQuestion;
+import com.example.AssignmentTrial1.service.QuestionService;
+import com.example.AssignmentTrial1.service.UserServiceImpl;
 import com.example.AssignmentTrial1.service.VoteQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.List;
 public class VoteQController {
     @Autowired
     VoteQuestionService voteService;
+
     @GetMapping(path="getVote/{v_id}")
     @ResponseBody
     public VoteQuestion getVote(@PathVariable Integer v_id) {
@@ -28,17 +31,17 @@ public class VoteQController {
         return voteService.getAllVotesOfContent(q_id);
     }
 
-    @GetMapping(path="getVotes/of/user/{u_id}")
-    @ResponseBody
-    public List<VoteQuestion> getVotesOfUser(@PathVariable Long u_id) {
-        return voteService.getAllVotesOfUser(u_id);
-    }
+//    @GetMapping(path="getVotes/of/user/{u_id}")
+//    @ResponseBody
+//    public List<VoteQuestion> getVotesOfUser(@PathVariable Long u_id) {
+//        return voteService.getAllVotesOfUser(u_id);
+//    }
 
-    @GetMapping(path="getVotes/to/user/{u_id}")
-    @ResponseBody
-    public List<VoteQuestion> getAllVotesTowardsUser(@PathVariable Long u_id) {
-        return voteService.getAllVotesTowardsUser(u_id);
-    }
+//    @GetMapping(path="getVotes/to/user/{u_id}")
+//    @ResponseBody
+//    public List<VoteQuestion> getAllVotesTowardsUser(@PathVariable Long u_id) {
+//        return voteService.getAllVotesTowardsUser(u_id);
+//    }
     // computeRatingFromThis ^
     @GetMapping(path="getAllVotes")
     @ResponseBody
@@ -48,10 +51,12 @@ public class VoteQController {
 
     @PostMapping(path="create/user/{u_id}/question/{q_id}")
     @ResponseBody
-    public ResponseEntity<VoteQuestion> createVote(@PathVariable Long u_id, @PathVariable Integer q_id, @RequestBody VoteQuestion vote) {
+//    TODO: see here what to do cus this return different things
+    public ResponseEntity<VoteQuestion> createVote(@PathVariable Long u_id, @PathVariable Integer q_id, @RequestBody Integer vote) {
         VoteQuestion vote1 = voteService.createVote(u_id,q_id,vote);
+
         if( vote1!= null)
-            return new ResponseEntity<>(vote, HttpStatus.OK);
+            return new ResponseEntity<>(vote1, HttpStatus.OK);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 

@@ -27,6 +27,14 @@ public class ContentDTO {
         this.vote = 0;
     }
 
+    public ContentDTO(Integer id, String text, Timestamp creation, UserDTO author, Integer vote) {
+        this.id =id;
+        this.text = text;
+        this.creation = creation;
+        this.author = author;
+        this.vote = vote;
+    }
+
     public String getText() {
         return text;
     }

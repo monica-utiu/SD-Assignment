@@ -51,7 +51,7 @@ public class QuestionServiceImpl implements QuestionService{
         List<QuestionDTO> questions = new ArrayList<>();
         questionRepository.findAll().forEach(q->questions.add(
                 new QuestionDTO(q.getId(),q.getText(),q.getTimeStamp(),new UserDTO(q.getAuthor().getUserId(), q.getAuthor().getFirstName(), q.getAuthor().getLastName()), q.getTitle(),
-                        q.getAnswersDTO())
+                        q.getAnswersDTO(), q.getTags(), q.getRating())
         ));
         return questions;
     }
@@ -61,7 +61,7 @@ public class QuestionServiceImpl implements QuestionService{
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
             Question question1 = question.get();
-            return new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(), new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()), question1.getTitle());
+            return new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(), new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()), question1.getTitle(), question1.getAnswersDTO(), question1.getTags(), question1.getRating());
         }
         return null;
     }
@@ -72,14 +72,16 @@ public class QuestionServiceImpl implements QuestionService{
         if(question.isPresent()) {
             Question question1 = question.get();
             QuestionDTO questionDTO  = new QuestionDTO(question1.getId(), question1.getText(),question1.getTimeStamp(),
-                    new UserDTO(question1.getAuthor().getUserId(), question1.getAuthor().getFirstName(),question1.getAuthor().getLastName()),
-                    question1.getTitle(),question1.getAnswersDTO());
+                    new UserDTO(question1.getAuthor().getUserId(),question1.getAuthor().getEmail() ,question1.getAuthor().getFirstName(),question1.getAuthor().getLastName(), question1.getAuthor().getPicture(), question1.getAuthor().getPhone(),question1.getAuthor().getRating() ),
+                    question1.getTitle(),question1.getAnswersDTO(),question1.getTags(), question1.getRating());
             List<Answer> answers = question1.getAnswers();
             if(answers.isEmpty())
                 return new QuestionAnswersDTO(questionDTO,null);
             else {
                 List<AnswerDTO> answersDTO = new ArrayList<>();
-                answers.forEach(a->answersDTO.add(new AnswerDTO(a.getId(),a.getText(),a.getTimeStamp(),new UserDTO(a.getAuthor().getUserId(), a.getAuthor().getFirstName(),a.getAuthor().getLastName()))));
+                answers.forEach(a->answersDTO.add(new AnswerDTO(a.getId(),a.getText(),a.getTimeStamp(),
+                        new UserDTO(a.getAuthor().getUserId(), a.getAuthor().getEmail(), a.getAuthor().getFirstName(),a.getAuthor().getLastName(), a.getAuthor().getPicture(), a.getAuthor().getPhone(), a.getAuthor().getRating()),
+                        a.getQuestionId().getText(),a.getRating())));
                 return new QuestionAnswersDTO(questionDTO,answersDTO);
             }
         }

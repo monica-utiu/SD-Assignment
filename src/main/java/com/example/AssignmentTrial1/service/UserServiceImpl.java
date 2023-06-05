@@ -15,6 +15,8 @@ public class UserServiceImpl implements UserService{
     static Long lastId = 10L;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    EmailSenderService emailSenderService;
     public UserServiceImpl() {
     }
 
@@ -38,7 +40,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()) {
             return new UserDTO(user.get().getUserId(), user.get().getEmail(),user.get().getFirstName(), user.get().getLastName(),
-                    "",user.get().getPhone(), user.get().getRating());
+                    user.get().getPicture(), user.get().getPhone(), user.get().getRating(), user.get().isBanned());
         } else {
             return null;
         }
@@ -54,6 +56,12 @@ public class UserServiceImpl implements UserService{
             if(user.getPhone() != null)  oldUser.setPhone(user.getPhone());
             if(user.getRating() != null) oldUser.setRating(user.getRating());
             if(user.getLastName() != null) oldUser.setLastName(user.getLastName());
+            if(user.getRating() != null) oldUser.setRating(user.getRating());
+            if(user.isBanned() != oldUser.isBanned()) {
+                oldUser.setBanned(user.isBanned());
+                String body = oldUser.isBanned() ? "We are sorry, you have been banned from our site. Please check our policies." : "You have been unbanned!";
+                emailSenderService.sendEmail(user.getEmail(),"Ban from stackoverflow",body);
+            }
             return userRepository.save(oldUser);
         } else {
             return null; // ? save new data or not?

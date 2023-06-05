@@ -27,12 +27,22 @@ public class QuestionController {
     @GetMapping(path="/getQuestion/{q_id}")
     @ResponseBody
     public QuestionDTO getQuestion(@PathVariable Integer q_id) {
+        Question q = new Question();
+        q.setId(q_id);
+        q.setRating(getScore(q_id));
+        updateQuestion(q_id,q);
+
         return questionService.readQuestion(q_id);
     }
 
     @GetMapping(path="/getQuestionAndAnswers/{q_id}")
     @ResponseBody
     public QuestionAnswersDTO getQuestionWithAnswer(@PathVariable Integer q_id) {
+        Question q = new Question();
+        q.setId(q_id);
+        q.setRating(getScore(q_id));
+        updateQuestion(q_id,q);
+
         return questionService.readQuestionAndAnswer(q_id);
     }
 
@@ -42,7 +52,7 @@ public class QuestionController {
         return questionService.getAllQuestions();
     }
 
-    @GetMapping(path="getQuestionScore/{q}")
+    @GetMapping(path="getQuestionScore/{q_id}")
     public Integer getScore(@PathVariable Integer q_id) {
         return this.voteService.getAllVotesOfContent(q_id).stream().map(VoteQuestion::getVote).reduce(0,Integer::sum);
     }

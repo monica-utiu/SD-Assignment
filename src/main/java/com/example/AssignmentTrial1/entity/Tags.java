@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name="tags")
 public class Tags {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="tag_id")
     private Integer tagId;
     @Column
@@ -26,6 +27,7 @@ public class Tags {
         this.title = title;
         this.questions = questions;
     }
+
 
     public Integer getTagId() {
         return tagId;

@@ -30,6 +30,11 @@ public class VoteAnswer {
     public VoteAnswer() {
     }
 
+    public VoteAnswer(Answer answer, Integer vote) {
+        this.answer = answer;
+        this.vote = vote;
+    }
+
     public Integer getVoteId() {
         return voteId;
     }

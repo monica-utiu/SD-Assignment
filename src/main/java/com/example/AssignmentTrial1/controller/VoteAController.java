@@ -2,6 +2,8 @@ package com.example.AssignmentTrial1.controller;
 
 import com.example.AssignmentTrial1.entity.votes.VoteAnswer;
 import com.example.AssignmentTrial1.entity.votes.VoteQuestion;
+import com.example.AssignmentTrial1.service.AnswerServiceImpl;
+import com.example.AssignmentTrial1.service.UserServiceImpl;
 import com.example.AssignmentTrial1.service.VoteAnswerService;
 import com.example.AssignmentTrial1.service.VoteQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,10 @@ import java.util.List;
 public class VoteAController {
     @Autowired
     VoteAnswerService voteService;
+    @Autowired
+    AnswerServiceImpl answerService;
+    @Autowired
+    UserServiceImpl userService;
     @GetMapping(path="getVote/{v_id}")
     @ResponseBody
     public VoteAnswer getVote(@PathVariable Integer v_id) {
@@ -37,7 +43,7 @@ public class VoteAController {
     @GetMapping(path="getVotes/to/user/{u_id}")
     @ResponseBody
     public List<VoteAnswer> getAllVotesTowardsUser(@PathVariable Long u_id) {
-        return voteService.getAllVotesTowardsUser(u_id);
+        return voteService.getAllAnswerVotesTowardsUser(u_id);
     }
     // computeRatingFromThis ^
     @GetMapping(path="getAllVotes")
@@ -48,10 +54,10 @@ public class VoteAController {
 
     @PostMapping(path="create/user/{u_id}/answer/{a_id}")
     @ResponseBody
-    public ResponseEntity<VoteAnswer> createVote(@PathVariable Long u_id, @PathVariable Integer a_id, @RequestBody VoteAnswer vote) {
+    public ResponseEntity<VoteAnswer> createVote(@PathVariable Long u_id, @PathVariable Integer a_id, @RequestBody Integer vote) {
         VoteAnswer vote1 = voteService.createVote(u_id,a_id,vote);
         if( vote1!= null)
-            return new ResponseEntity<>(vote, HttpStatus.OK);
+            return new ResponseEntity<>(vote1, HttpStatus.OK);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 

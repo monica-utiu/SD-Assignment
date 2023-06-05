@@ -1,8 +1,11 @@
 package com.example.AssignmentTrial1.entity;
 
+import com.example.AssignmentTrial1.entity.votes.VoteAnswer;
+import com.example.AssignmentTrial1.entity.votes.VoteQuestion;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -23,8 +26,10 @@ public class User {
     private Float rating;
     @Column
     private String passphrase;
-//    @Column
-//    private String picture;
+    @Column
+    private byte[] picture;
+    @Column
+    private boolean banned;
     @Column
     @Enumerated(EnumType.STRING)
     private Role rol;
@@ -35,14 +40,33 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Answer> answer;
-    //private String password;
-//    @OneToMany(mappedBy = "user")
-//    private List<VoteAnswer> voteAnswers;
-//    @OneToMany(mappedBy = "user")
-//    private List<VoteQuestion> voteQuestions;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<VoteAnswer> voteAnswers;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<VoteQuestion> voteQuestions;
 
     public User() {
 
+    }
+
+    public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, String passphrase, byte[] picture, boolean banned, Role rol, List<Question> questions, List<Answer> answer, List<VoteAnswer> voteAnswers, List<VoteQuestion> voteQuestions) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.rating = rating;
+        this.passphrase = passphrase;
+        this.picture = picture;
+        this.banned = banned;
+        this.rol = rol;
+        this.questions = questions;
+        this.answer = answer;
+        this.voteAnswers = voteAnswers;
+        this.voteQuestions = voteQuestions;
     }
 
     public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, String passphrase, Role rol, List<Question> questions, List<Answer> answer) {
@@ -78,6 +102,53 @@ public class User {
         this.rol = rol;
         this.questions = questions;
         this.answer = answer;
+    }
+
+    public User(Long userId, String firstName, String lastName, String email, String phone, Float rating, String passphrase, Role rol, List<Question> questions, List<Answer> answer, List<VoteAnswer> voteAnswers, List<VoteQuestion> voteQuestions) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.rating = rating;
+        this.passphrase = passphrase;
+        this.rol = rol;
+        this.questions = questions;
+        this.answer = answer;
+        this.voteAnswers = voteAnswers;
+        this.voteQuestions = voteQuestions;
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    public List<VoteAnswer> getVoteAnswers() {
+        return voteAnswers;
+    }
+
+    public void setVoteAnswers(List<VoteAnswer> voteAnswers) {
+        this.voteAnswers = voteAnswers;
+    }
+
+    public List<VoteQuestion> getVoteQuestions() {
+        return voteQuestions;
+    }
+
+    public void setVoteQuestions(List<VoteQuestion> voteQuestions) {
+        this.voteQuestions = voteQuestions;
     }
 
     public String getPassphrase() {
