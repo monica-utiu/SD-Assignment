@@ -30,13 +30,8 @@ public class TagServiceImpl implements TagService{
     }
 
     @Override
-    public List<String> getAllTags() {
-        List<String> tags = new ArrayList<>();
-        tagRepository.findAll().forEach(t -> {
-            tags.add(t.getTitle());
-        }
-        );
-        return tags;
+    public List<Tags> getAllTags() {
+        return (List<Tags>) tagRepository.findAll();
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.List;
 @Table(name="answer")
 public class Answer{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="answer_id")
     private Integer id;
     @JsonIgnore
@@ -37,7 +38,7 @@ public class Answer{
     @Column
     private Integer rating;
     @JsonIgnore
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer",cascade = CascadeType.REMOVE)
     private List<VoteAnswer> votes = new ArrayList<>();
 
 

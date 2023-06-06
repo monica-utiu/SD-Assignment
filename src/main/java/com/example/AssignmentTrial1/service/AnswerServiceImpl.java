@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @Service
 public class AnswerServiceImpl implements AnswerService{
-    static Integer id=10;
     @Autowired
     AnswerRepository answerRepository;
     @Autowired
@@ -36,7 +35,6 @@ public class AnswerServiceImpl implements AnswerService{
         if(author.isPresent() && question.isPresent()) {
             answer.setQuestionId(question.get());
             answer.setAuthor(author.get());
-            answer.setId(id++);
             answer.setTimeStamp(new Timestamp(System.currentTimeMillis()));
             answerRepository.save(answer);
             return answer;

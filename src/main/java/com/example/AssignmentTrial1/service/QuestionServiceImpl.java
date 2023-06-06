@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class QuestionServiceImpl implements QuestionService{
-    static Integer id = 10;
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
@@ -34,11 +33,11 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public Question createQuestion(Long userId, Question questionDetails) {
-        // if i would have userRepository here i would check for the userId and get it
         Optional<User> author = userRepository.findById(userId);
         if(author.isPresent()) {
+            System.out.println("In create question" + questionDetails.getTags());
+            questionDetails.getTags().forEach( t-> addTagToQuestion(questionDetails.getId(),t.getTitle()));
             questionDetails.setAuthor(author.get());
-            questionDetails.setId(id++);
             questionDetails.setTimeStamp(new Timestamp(System.currentTimeMillis()));
             questionRepository.save(questionDetails);
             return questionDetails;
@@ -50,8 +49,9 @@ public class QuestionServiceImpl implements QuestionService{
     public List<QuestionDTO> getAllQuestions() {
         List<QuestionDTO> questions = new ArrayList<>();
         questionRepository.findAll().forEach(q->questions.add(
-                new QuestionDTO(q.getId(),q.getText(),q.getTimeStamp(),new UserDTO(q.getAuthor().getUserId(), q.getAuthor().getFirstName(), q.getAuthor().getLastName()), q.getTitle(),
-                        q.getAnswersDTO(), q.getTags(), q.getRating())
+                new QuestionDTO(q.getId(),q.getText(),q.getTimeStamp(),
+                        new UserDTO(q.getAuthor().getUserId(), q.getAuthor().getEmail(),q.getAuthor().getFirstName(), q.getAuthor().getLastName(), q.getAuthor().getPicture(), q.getAuthor().getPhone(),q.getAuthor().getRating()),
+                        q.getTitle(), q.getAnswersDTO(), q.getTags(), q.getRating())
         ));
         return questions;
     }
@@ -109,6 +109,10 @@ public class QuestionServiceImpl implements QuestionService{
                 oldQ.setImage(newQuestion.getImage());
                 updateTime(oldQ);
             }
+            if(newQuestion.getTags()!=null) {
+                oldQ.setTags(newQuestion.getTags());
+                updateTime(oldQ);
+            }
             return questionRepository.save(oldQ);
         }
         return null;
@@ -130,10 +134,13 @@ public class QuestionServiceImpl implements QuestionService{
                 // Tag does not exist, create a new one
                 tag = new Tags();
                 tag.setTitle(tagTitle);
+                System.out.println("Tag " + tagTitle);
                 tagRepository.save(tag);
             }
             Question question1 = question.get();
-            question1.getTags().add(tag);
+            List<Tags> tags = question1.getTags();
+            tags.add(tag);
+            question1.setTags(tags);
             questionRepository.save(question1);
         }
     }

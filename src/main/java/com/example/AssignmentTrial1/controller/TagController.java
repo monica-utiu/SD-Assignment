@@ -22,7 +22,7 @@ public class TagController {
     public String getTag(@PathVariable Integer t_id) { return tagService.readTag(t_id);}
     @GetMapping(path="/getAllTags")
     @ResponseBody
-    public List<String> getAllTags() {return tagService.getAllTags();}
+    public List<Tags> getAllTags() {return tagService.getAllTags();}
 
     @PostMapping(path="/create")
     @ResponseBody

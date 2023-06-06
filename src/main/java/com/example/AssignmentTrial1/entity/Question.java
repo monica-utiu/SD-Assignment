@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class Question{
     @Id
     @Column(name="question_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
     @JoinColumn(name="author")
@@ -37,7 +38,7 @@ public class Question{
     @Column
     private Integer rating;
     @JsonIgnore
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<VoteQuestion> votes = new ArrayList<>();
 
     @JsonIgnore
@@ -213,11 +214,4 @@ public class Question{
         this.tags = tags;
     }
 
-//    public ArrayList<VoteQuestion> getVotes() {
-//        return votes;
-//    }
-//
-//    public void setVotes(ArrayList<VoteQuestion> votes) {
-//        this.votes = votes;
-//    }
 }
